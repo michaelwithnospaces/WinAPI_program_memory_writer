@@ -3,9 +3,9 @@
 
 void getHandleFromPid();
 void writeIntToAddress(LPVOID baseAddress, int dataBuffer);
+void writeCharToAddress(LPVOID baseAddress, char dataBuffer[]);
 void terminateProgram();
 uintptr_t getMemoryAddress();
-
 
 HANDLE hProcess;
 SIZE_T* pNumberOfBytesWritten = NULL;
@@ -14,9 +14,18 @@ int main() {
 
     getHandleFromPid();
 
-	int intToWrite = 999999;
-    uintptr_t baseAddress = getMemoryAddress();
+    // write int to target address
+	int intToWrite = 123456;
+    // uintptr_t baseAddress = getMemoryAddress();
+    uintptr_t baseAddress = 0xc0454ff874; // TEST
+
     writeIntToAddress((LPVOID)baseAddress, intToWrite);
+
+    // write char array to target address
+    char charToWrite[128] = "This process has been hacked!";
+    // baseAddress = getMemoryAddress();
+    baseAddress = 0xc0454ff8e0; // TEST
+    writeCharToAddress((LPVOID)baseAddress, charToWrite);
 
     terminateProgram();
 
@@ -51,6 +60,8 @@ void getHandleFromPid() {
 
 // writes integer to address
 void writeIntToAddress(LPVOID baseAddress, int dataBuffer) {
+    std::cout << "Writing int to " << baseAddress << "..." << std::endl;
+
     BOOL wpmStatus = WriteProcessMemory(
         hProcess,
         baseAddress,
@@ -64,7 +75,28 @@ void writeIntToAddress(LPVOID baseAddress, int dataBuffer) {
         system("pause");
     }
     else {
-        std::cout << "Overwritten successfully." << std::endl;
+        std::cout << "Overwritten successfully." << std::endl << std::endl;
+    }
+}
+
+// writes char array to address
+void writeCharToAddress(LPVOID baseAddress, char dataBuffer[]) {
+    std::cout << "Writing char array to " << baseAddress << "..." << std::endl;
+
+    BOOL wpmStatus = WriteProcessMemory(
+        hProcess,
+        baseAddress,
+        dataBuffer,
+        20,
+        pNumberOfBytesWritten
+    );
+
+    if (wpmStatus == FALSE) {
+        std::cout << "WriteProcessMemory failed. [GetLastError] " << std::dec << GetLastError() << std::endl;
+        system("pause");
+    }
+    else {
+        std::cout << "Overwritten successfully." << std::endl << std::endl;
     }
 }
 
