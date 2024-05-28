@@ -15,16 +15,14 @@ int main() {
     getHandleFromPid();
 
     // write int to target address
-	int intToWrite = 123456;
-    // uintptr_t baseAddress = getMemoryAddress();
-    uintptr_t baseAddress = 0xc0454ff874; // TEST
+	int intToWrite = 999999;
+    uintptr_t baseAddress = getMemoryAddress();
 
     writeIntToAddress((LPVOID)baseAddress, intToWrite);
 
     // write char array to target address
     char charToWrite[128] = "This process has been hacked!";
-    // baseAddress = getMemoryAddress();
-    baseAddress = 0xc0454ff8e0; // TEST
+    baseAddress = getMemoryAddress();
     writeCharToAddress((LPVOID)baseAddress, charToWrite);
 
     terminateProgram();
@@ -87,7 +85,7 @@ void writeCharToAddress(LPVOID baseAddress, char dataBuffer[]) {
         hProcess,
         baseAddress,
         dataBuffer,
-        20,
+        128,
         pNumberOfBytesWritten
     );
 
