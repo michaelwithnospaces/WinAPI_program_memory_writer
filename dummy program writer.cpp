@@ -4,6 +4,7 @@
 void getHandleFromPid();
 void writeIntToAddress(LPVOID baseAddress, int dataBuffer);
 void terminateProgram();
+uintptr_t getMemoryAddress();
 
 
 HANDLE hProcess;
@@ -13,8 +14,8 @@ int main() {
 
     getHandleFromPid();
 
-	int intToWrite = 123456;
-    uintptr_t baseAddress = 0xC0454FF874;
+	int intToWrite = 999999;
+    uintptr_t baseAddress = getMemoryAddress();
     writeIntToAddress((LPVOID)baseAddress, intToWrite);
 
     terminateProgram();
@@ -72,4 +73,14 @@ void terminateProgram() {
     std::cout << std::endl;
     std::cout << "Press ENTER to quit." << std::endl;
     system("pause > nul");
+}
+
+// Get the taget memory addresss
+uintptr_t getMemoryAddress() {
+    uintptr_t address = 0x0;
+
+    std::cout << "Target memory address (hexadecimal): 0x";
+    std::cin >> std::hex >> address;
+
+    return address;
 }
